@@ -143,7 +143,14 @@ cd ~/Downloads/Earshot
               <summary>Install</summary>
               <div class="install-body">
                 <p>Requirements: macOS 13 Ventura or later, Apple Silicon. The installer is interactive - auto-installs Homebrew and rclone (with opt-out), then walks you through Drive OAuth and password setup if you enable cloud sync.</p>
-                <pre><code>git clone https://github.com/mord58562/ableton-lives.git
+                <a class="download-btn" href="downloads/ableton-lives.tar.gz" download>Download source tarball</a>
+                <pre><code># option A: from the downloaded tarball
+tar -xzf ableton-lives-*.tar.gz
+cd ableton-lives-*/
+zsh scripts/install.sh
+
+# option B: clone from GitHub
+git clone https://github.com/mord58562/ableton-lives.git
 cd ableton-lives
 zsh scripts/install.sh</code></pre>
                 <p>The installer detects your Ableton folder, lets you add an optional external drive, configures storage caps, and offers to run the encrypted Drive setup at the end. The Swift menubar app is built locally via <code>swift/build.sh</code> and registered as a LaunchAgent.</p>
