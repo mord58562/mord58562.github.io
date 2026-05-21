@@ -20,25 +20,6 @@
     })();
   </script>
   <script src="script.js" defer></script>
-  <script>
-    // Pull the live A to E question count from the deployed site so the
-    // portfolio description never drifts from the bank. Silent fallback
-    // to the data-fallback number if the fetch fails (offline portfolio).
-    (function () {
-      var el = document.getElementById("atoeCount");
-      if (!el) return;
-      fetch("https://mord58562.github.io/a-to-e/data/meta.json", { cache: "no-store" })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (m) {
-          if (!m) return;
-          var n = m.total_questions || m.totalQuestions || m.question_count;
-          if (typeof n !== "number") return;
-          var rounded = n >= 100 ? (Math.round(n / 10) * 10) : n;
-          el.textContent = String(rounded);
-        })
-        .catch(function () { /* keep fallback */ });
-    })();
-  </script>
 </head>
 <body>
 
@@ -64,7 +45,7 @@
           </div>
           <div class="project-body">
             <h2>A to E</h2>
-            <p class="project-desc">A practice MCQ bank for the final-year Australian MD student. About <span id="atoeCount" data-fallback="830">830</span> single-best-answer clinical-reasoning questions across paediatrics, obstetrics &amp; gynaecology, psychiatry, and adult medicine, every option cited inline against a free Australian clinical reference so any claim is verifiable. Questions are calibrated to test the reasoning steps a candidate has to take, not solvable by spotting a keyword in the stem. Static frontend backed by a Cloudflare Worker; guest mode keeps progress on the device, signed-in users see how other users picked each option plus first-time accuracy and per-discipline stats. Authors paste new questions via a self-contained prompt that works in any free LLM (no API key required), audit and promote them through an in-app dashboard, or run a scheduled cloud agent that generates a fresh 15-20 question batch up to 15 times a day.</p>
+            <p class="project-desc">A practice MCQ bank for the final-year Australian MD student. An ever increasing number of single-best-answer clinical-reasoning questions across paediatrics, obstetrics &amp; gynaecology, psychiatry, and adult medicine, every option cited inline against a free Australian clinical reference so any claim is verifiable. Questions are calibrated to test the reasoning steps a candidate has to take, not solvable by spotting a keyword in the stem. Static frontend backed by a Cloudflare Worker; guest mode keeps progress on the device, signed-in users see how other users picked each option plus first-time accuracy and per-discipline stats. Authors paste new questions via a self-contained prompt that works in any free LLM (no API key required), audit and promote them through an in-app dashboard, or run a scheduled cloud agent that generates a fresh 15-20 question batch up to 15 times a day.</p>
             <div class="project-stack">Cloudflare Workers · D1 · GitHub Pages</div>
             <a class="project-source project-live" href="https://mord58562.github.io/a-to-e/" rel="noopener noreferrer" target="_blank">mord58562.github.io/a-to-e ↗ (live, guest mode - no signup)</a>
             <a class="project-source" href="https://github.com/mord58562/a-to-e" rel="noopener noreferrer" target="_blank">github.com/mord58562/a-to-e ↗</a>
