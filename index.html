@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mord58562</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved === 'dark' || saved === 'light') {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <script src="script.js" defer></script>
+  <script>
+    // Pull the live A to E question count from the deployed site so the
+    // portfolio description never drifts from the bank. Silent fallback
+    // to the data-fallback number if the fetch fails (offline portfolio).
+    (function () {
+      var el = document.getElementById("atoeCount");
+      if (!el) return;
+      fetch("https://mord58562.github.io/a-to-e/data/meta.json", { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (m) {
+          if (!m) return;
+          var n = m.total_questions || m.totalQuestions || m.question_count;
+          if (typeof n !== "number") return;
+          var rounded = n >= 100 ? (Math.round(n / 10) * 10) : n;
+          el.textContent = String(rounded);
+        })
+        .catch(function () { /* keep fallback */ });
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">Software</p>
+      <h1 class="hero-title">Things I've built<br /><em>with Claude.</em></h1>
+      <p class="hero-sub">Side projects. Most started because something didn't exist yet, or the version that existed wasn't quite right.</p>
+    </div>
+  </header>
+
+  <main>
+    <section id="work">
+      <div class="work-list">
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">01</span>
+            <div class="project-tags">
+              <span class="tag">Full-stack</span>
+              <span class="tag">Cloudflare Workers</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>A to E</h2>
+            <p class="project-desc">A practice MCQ bank for the final-year Australian MD student. About <span id="atoeCount" data-fallback="830">830</span> single-best-answer clinical reasoning questions across paediatrics, obstetrics &amp; gynaecology, psychiatry, and adult medicine. Every option is cited inline against a free Australian clinical reference so any claim is verifiable, and questions are calibrated to test the reasoning steps a candidate has to take rather than to be solvable by spotting a keyword in the stem. The site is a static frontend backed by a Cloudflare Worker; guest mode keeps progress on the device for visitors who don't want an account, while signed-in users see what percentage of other users picked each option after they submit, plus a stats panel with first-time accuracy and per-discipline breakdowns. Authors can paste new questions via a self-contained prompt that works in any free LLM (no API key required), audit and promote them through an in-app dashboard, or run a scheduled cloud agent that generates a fresh 15-20 question batch up to 15 times a day, weighted toward harder difficulty tiers.</p>
+            <div class="project-stack">Cloudflare Workers · D1 · GitHub Pages</div>
+            <a class="project-source project-live" href="https://mord58562.github.io/a-to-e/" rel="noopener noreferrer" target="_blank">mord58562.github.io/a-to-e ↗ (live, guest mode - no signup)</a>
+            <a class="project-source" href="https://github.com/mord58562/a-to-e" rel="noopener noreferrer" target="_blank">github.com/mord58562/a-to-e ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>The frontend is a static site - clone or download the zip, open <code>index.html</code> in a browser, and you have the whole bank locally. The Cloudflare Worker piece is only needed if you want accounts + social stats + remote question generation.</p>
+                <a class="download-btn" href="downloads/a-to-e.zip" download>Download source zip</a>
+                <p><strong>Live site:</strong> <a href="https://mord58562.github.io/a-to-e/">mord58562.github.io/a-to-e</a> (guest mode, no signup required).</p>
+                <p><strong>Run the worker yourself</strong> (optional, gives you accounts + stats + batch publishing):</p>
+                <pre><code>brew install cloudflare-wrangler
+cd cloudflare-worker
+wrangler login
+wrangler d1 create a-to-e               # paste the printed database_id into wrangler.toml
+wrangler d1 execute a-to-e --file=schema.sql --remote
+wrangler secret put GITHUB_TOKEN        # fine-grained PAT scoped to your fork, Contents R/W
+wrangler secret put ROUTINE_TOKEN       # any random string; required for /commit-batch
+wrangler deploy</code></pre>
+                <p>Then set <code>WORKER_URL</code> in <code>assets/app.js</code> to the printed worker URL, commit, push. See <code>cloudflare-worker/DEPLOY.md</code> for the full walkthrough.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>wrangler delete a-to-e-inbox</code> + <code>wrangler d1 delete a-to-e</code> on the worker side; remove the GitHub repo on the frontend side.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">02</span>
+            <div class="project-tags">
+              <span class="tag">macOS</span>
+              <span class="tag">SwiftUI</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Earshot</h2>
+            <p class="project-desc">A menubar parametric EQ for macOS system audio, routed to any output device you pick. Up to 24 bands rendered as draggable dots on the frequency response - drag to set frequency and gain, Cmd-Z to undo. Live editing without dropouts; solo a band to hear exactly what one filter is doing. Auto-preamp parks peaks just under clipping and only ever attenuates. Save named EQ presets; import and export AutoEq ParametricEQ.txt, or search the built-in catalog of ~2000 oratory1990 and Crinacle measurements and load one as a preset. One-click speakers passthrough for when you yank headphones and don't want to dig through Sound preferences.</p>
+            <div class="project-stack">Core Audio · BlackHole</div>
+            <a class="project-source" href="https://github.com/mord58562/earshot" rel="noopener noreferrer" target="_blank">github.com/mord58562/earshot ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 13 Ventura or later, Apple Silicon. Two paths.</p>
+                <p><strong>Prebuilt (no Terminal):</strong> install BlackHole 2ch first via <code>brew install blackhole-2ch</code> or from <a href="https://existential.audio/blackhole/">existential.audio/blackhole</a>, then download <a href="https://github.com/mord58562/earshot/releases/latest">Earshot.app.zip from the latest release</a>, unzip, drag <code>Earshot.app</code> to <code>/Applications</code>. First launch: right-click <code>Earshot.app</code> → <strong>Open</strong> (the build is ad-hoc signed; this is the standard Gatekeeper override).</p>
+                <p><strong>From source:</strong> <code>install.sh</code> handles everything - it checks for BlackHole 2ch, Homebrew-installs it if missing, builds the app, copies it to /Applications, and launches it.</p>
+                <a class="download-btn" href="downloads/earshot.zip" download>Download source zip</a>
+                <pre><code># one-time, skip if already installed
+xcode-select --install
+
+cd ~/Downloads/Earshot
+# detects + installs BlackHole, builds, copies, launches
+./install.sh</code></pre>
+                <p>On first launch, approve the Microphone permission (macOS classifies BlackHole as a microphone). Earshot auto-registers as a login item. If you don't have Homebrew, install BlackHole 2ch manually from <a href="https://existential.audio/blackhole/">existential.audio/blackhole</a> and re-run <code>./install.sh</code>.</p>
+                <p>Linux users: a Python CLI in <code>linux/</code> applies the same AutoEQ presets system-wide via PipeWire's filter-chain - run <code>earshot-linux doctor</code> to check your stack, then <code>earshot-linux headphone "HD 600"</code> to download + apply a preset from the bundled catalog.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>rm -rf /Applications/Earshot.app</code> - presets stay in <code>~/Library/Application Support/Earshot/</code>.</p>
+                <p><strong>What's new in 1.2.0:</strong> system-output hand-off - picking a different output in the macOS Sound menu / Control Center / Bluetooth wake disengages EQ and lets audio flow straight through; re-selecting BlackHole 2ch as the system output re-engages EQ with the same routing as before, no menubar visit required.</p>
+                <p><strong>What's new in 1.1.0:</strong> menubar glyph now has off / active / bypass states; click empty curve area spawns a band, scroll wheel adjusts Q, drag readout follows the cursor with monospaced figures; right-click a band → <em>Edit values…</em> opens a numeric inspector; Settings window (⌘,) and About panel; first-run sheet walks through BlackHole and microphone permission. Modifier-key hint strip below the frequency axis (⇧ lock Hz, ⌥ lock dB, scroll Q, dbl reset, click add).</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">03</span>
+            <div class="project-tags">
+              <span class="tag">macOS</span>
+              <span class="tag">SwiftUI</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Ableton Lives</h2>
+            <p class="project-desc">Automatic versioning, encrypted Google Drive backup, and crash recovery for Ableton Live projects on macOS. Every <code>.als</code> save is captured within 30 seconds and stored as a timestamped snapshot; finished audio exports (<code>.wav .aiff .mp3 .flac</code>) are mirrored too. Tiered retention keeps storage small (24h all / hourly to 30d / daily to 6mo / weekly to 1yr / delete). Optional encrypted nightly sync to Google Drive via rclone crypt - Google sees only opaque blobs, no filenames. When Ableton crashes, the closest preceding version is automatically pinned. Right-click any <code>.als</code> in Finder to restore. Native menubar app with live progress bars, sync status and one-click "Sync now". Hard storage caps so the cloud account is never at risk.</p>
+            <div class="project-stack">launchd · zsh · SwiftUI · rclone</div>
+            <a class="project-source" href="https://github.com/mord58562/ableton-lives" rel="noopener noreferrer" target="_blank">github.com/mord58562/ableton-lives ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 13 Ventura or later, Apple Silicon. The installer is interactive - auto-installs Homebrew and rclone (with opt-out), then walks you through Drive OAuth and password setup if you enable cloud sync.</p>
+                <pre><code>git clone https://github.com/mord58562/ableton-lives.git
+cd ableton-lives
+zsh scripts/install.sh</code></pre>
+                <p>The installer detects your Ableton folder, lets you add an optional external drive, configures storage caps, and offers to run the encrypted Drive setup at the end. The Swift menubar app is built locally via <code>swift/build.sh</code> and registered as a LaunchAgent.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>zsh scripts/uninstall.sh</code> - leaves your version store, config, cloud backup, and rclone authentication intact. Pass <code>--purge</code> to also wipe <code>~/.config/ableton-lives/</code>, the local <code>_versions/</code> tree, and the rclone remotes.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">04</span>
+            <div class="project-tags">
+              <span class="tag">Stremio</span>
+              <span class="tag">Cloudflare Workers</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Marquee</h2>
+            <p class="project-desc">A Stremio add-on that replaces the homepage with curated catalog rows that adapt to what you watch. Every detail-page open and every play press is logged to a per-user attention rollup with session clustering, completion ratios, and recency decay; ranking shifts on the next refresh. Library pairing uses Stremio's own four-character code at <code>link.stremio.com</code>: scan the QR, confirm on a phone, your library and watch state land in seconds, and the auth key is discarded after one-shot ingest. Optional Letterboxd public RSS and Last.fm scrobble mood inference, plus zero-click context from weather, time-of-day, lunar phase, and upcoming holidays. Plays nicely with the standard Stremio source pipeline: pick a tile and the usual Torrentio / Real-Debrid / etc. source-selection screen opens unchanged.</p>
+            <div class="project-stack">Cloudflare Workers · D1 · TMDB</div>
+            <a class="project-source" href="https://github.com/mord58562/marquee" rel="noopener noreferrer" target="_blank">github.com/mord58562/marquee ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>End users will eventually install Marquee in one step by pasting its manifest URL into Stremio's add-on search; once submitted to the public add-on registry, no setup or keys will be required. The instructions below are for self-hosting against your own free Cloudflare Workers account.</p>
+                <a class="download-btn" href="downloads/marquee.zip" download>Download marquee.zip</a>
+                <pre><code># one-time, skip if already installed
+brew install node
+
+cd ~/Downloads/marquee
+npm install
+cp .dev.vars.example .dev.vars
+# paste your operator-side TMDB v4 read token and public Trakt client ID
+# (free from themoviedb.org and trakt.tv) into .dev.vars, then:
+npx wrangler d1 execute marquee --local --file=migrations/0001_init.sql
+npx wrangler d1 execute marquee --local --file=migrations/0002_attention.sql
+npx wrangler d1 execute marquee --local --file=migrations/0003_v03.sql
+npx wrangler d1 execute marquee --local --file=migrations/0004_anime_opt_in.sql
+npm run dev</code></pre>
+                <p>Open <code>http://127.0.0.1:7070/configure</code> in a browser; a Marquee ID is minted automatically and the page becomes your settings panel. Paste the displayed URL into Stremio's add-on search on any device. For production, run <code>wrangler login</code>, create a real D1 database, apply the same migrations with <code>--remote</code>, set <code>CONFIG_AES_KEY</code> as a worker secret (32 random bytes base64), and <code>wrangler deploy</code>; see <code>DEPLOY.md</code> in the repo for the full sequence.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> remove the add-on from Stremio. Local D1 state lives in <code>.wrangler/state/</code>; delete the folder to wipe.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">05</span>
+            <div class="project-tags">
+              <span class="tag">Anki</span>
+              <span class="tag">Python</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>The AnkiDote</h2>
+            <p class="project-desc">A unified medical-reference sidebar for Anki. Three independently toggleable side docks: StatPearls and DrugBank popups backed by a curated local term database, an UpToDate webview with persistent institutional SSO, and a bring-your-own-account AI chat dock supporting Claude, ChatGPT, Gemini, Copilot, Perplexity, DeepSeek, Grok, and Duck.ai. Custom popup terms via JSON, send-selection-to-chat, and drag-to-reorder toolbar buttons. Replaces the earlier AnkiPearls and AnkiDate add-ons.</p>
+            <div class="project-stack">PyQt6 · QWebEngine</div>
+            <a class="project-source" href="https://github.com/mord58562/theankidote" rel="noopener noreferrer" target="_blank">github.com/mord58562/theankidote ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: Anki 2.1.50 or later (Qt6 build). Install via AnkiWeb, or download the source zip and copy the folder into Anki's add-ons directory.</p>
+                <pre><code>brew install --cask anki   # one-time, skip if already installed</code></pre>
+                <p><strong>AnkiWeb:</strong> Tools → Add-ons → Get Add-ons → paste <code>720072719</code> → restart Anki.</p>
+                <a class="download-btn" href="downloads/theankidote.zip" download>Download TheAnkiDote.zip</a>
+                <p>On first launch, a welcome dialog lets you tick which of the three modules to enable. SSO setup and shortcut customization in <strong>Tools → The AnkiDote</strong>; see <code>config.md</code> in the repo for institutional SSO examples.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">06</span>
+            <div class="project-tags">
+              <span class="tag">macOS</span>
+              <span class="tag">SwiftUI</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Jury</h2>
+            <p class="project-desc">Weekly cleanup digest and always-active filesystem monitor for macOS. Scans Documents and Downloads, groups duplicate-variant files (UUID, integer, and (n) suffixes) into clusters, and auto-deletes safe files like .DS_Store, lock files, and partial downloads after an lsof safety check. Protected document types (.docx, .xlsx, .pdf, .pages, .numbers, .key) are never auto-deleted - they're surfaced in a Markdown digest at <code>~/Documents/cleanup-digest.md</code> with paste-ready Trash commands. A menubar app shows current quarantine, expiring items, and one-click undo; removed files spend 30 days in quarantine before purge.</p>
+            <div class="project-stack">launchd · SwiftUI</div>
+            <a class="project-source" href="https://github.com/mord58562/jury" rel="noopener noreferrer" target="_blank">github.com/mord58562/jury ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 13 Ventura or later, Apple Silicon, Python 3. Download the zip, build the menubar app, then run the installer.</p>
+                <a class="download-btn" href="downloads/jury.zip" download>Download Jury.zip</a>
+                <pre><code># one-time, skip if already installed
+xcode-select --install
+brew install --cask miniconda
+
+cd ~/Downloads/jury
+./swift-app/build.sh install
+bash install.sh
+open ~/Applications/Jury.app</code></pre>
+                <p>The installer registers two LaunchAgents: a filesystem monitor triggered by changes in Documents and Downloads (throttled to once per 30 seconds), and a Sunday digest that fires at 03:00.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>for L in com.mord58562.jury.monitor com.mord58562.jury.digest com.mord58562.jury.menubar; do launchctl bootout gui/$(id -u)/$L 2&gt;/dev/null; rm -f ~/Library/LaunchAgents/$L.plist; done; rm -rf ~/Applications/Jury.app</code> - quarantine stays in <code>~/Library/Application Support/jury/</code>.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">07</span>
+            <div class="project-tags">
+              <span class="tag">launchd</span>
+              <span class="tag">Python</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Set Memory</h2>
+            <p class="project-desc">A mount-driven analyser for the rekordbox session log on a DJ USB. Every time you plug in a rekordbox drive, Set Memory reads the encrypted <code>master.db</code> via SQLCipher, accumulates every <code>djmdHistory</code> session into a local <code>state.db</code>, and surfaces two things a digital DJ tends to lose track of: tracks played often but not touched in months, and tracks that have been in the library a while but have never appeared in any session. Volumes are discovered, not configured - it walks <code>/Volumes/*</code> looking for the <code>PIONEER/Master/master.db</code> + <code>PIONEER/rekordbox/</code> shape, so reformatting, renaming, or swapping drives doesn't break sync, and multiple drives plugged in at once all process in the same run. WAL-aware atomic snapshot with retry; deterministic per-session fingerprinting so re-mounts and mirrored drives never double-count. All on-machine - no cloud, no uploads, no audio analysis.</p>
+            <div class="project-stack">launchd · pyrekordbox · SQLCipher</div>
+            <a class="project-source" href="https://github.com/mord58562/set-memory" rel="noopener noreferrer" target="_blank">github.com/mord58562/set-memory ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 13 Ventura or later, Homebrew, miniconda3 at <code>~/miniconda3/</code>. The installer verifies the toolchain, builds the launchd agent, and runs an end-to-end smoke test against whatever drive is currently mounted (if any).</p>
+                <a class="download-btn" href="downloads/set-memory.zip" download>Download set-memory.zip</a>
+                <pre><code># one-time, skip if already installed
+brew install sqlcipher
+brew install --cask miniconda
+
+cd ~/Downloads/set-memory
+~/miniconda3/bin/pip install pyrekordbox==0.4.4
+bash scripts/install.sh</code></pre>
+                <p>Plug any rekordbox USB into the Mac and the agent fires automatically: digest at <code>~/Downloads/set-memory/digest.md</code> plus a macOS notification. Non-rekordbox mounts are ignored silently. <code>config.json</code> only holds analysis thresholds (no per-drive setup needed).</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>bash scripts/uninstall.sh</code> - removes the launchd agent and leaves <code>state.db</code>, <code>digest.md</code>, and <code>logs/</code> in place. Delete them manually for a clean slate.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">08</span>
+            <div class="project-tags">
+              <span class="tag">macOS</span>
+              <span class="tag">SwiftUI</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>LittleDia</h2>
+            <p class="project-desc">Floating mini-browser for macOS. <kbd>⌘E</kbd> from any app opens a small window where you can type a URL or search. Inspired by Arc's Little Arc, adapted for Dia but works with Chrome, Safari, Firefox, Brave, and most others. History pulls from whichever browsers you have installed, ranked by frecency. Includes Dark Reader integration, image hover preview, reading list, reader mode, and userscript support.</p>
+            <div class="project-stack">AppKit · WebKit</div>
+            <a class="project-source" href="https://github.com/mord58562/little-dia" rel="noopener noreferrer" target="_blank">github.com/mord58562/little-dia ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 11 Big Sur or later, Apple Silicon. Download the zip, unzip, and run the setup script.</p>
+                <a class="download-btn" href="downloads/littledia.zip" download>Download LittleDia.zip</a>
+                <pre><code># one-time, skip if already installed
+xcode-select --install
+
+cd ~/Downloads/"Little Dia"
+chmod +x setup.sh
+./setup.sh</code></pre>
+                <p>After setup, press <kbd>⌘E</kbd> from any app to open the window. The app runs as a background agent - no Dock icon.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>pkill -f LittleDia; launchctl unload ~/Library/LaunchAgents/com.littledia.app.plist; rm ~/Library/LaunchAgents/com.littledia.app.plist</code></p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>mord58562 · 2026</span>
+    <span>Built with Claude</span>
+    <span class="footer-right">
+      <span class="footer-disclaimer">All projects are provided as-is, without support or warranty. Use at your own risk.</span>
+      <button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+      </button>
+    </span>
+  </footer>
+
+</body>
+</html>
