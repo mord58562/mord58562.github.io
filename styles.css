@@ -250,7 +250,7 @@ main { max-width: var(--max); margin: 0 auto; }
   width: fit-content;
 }
 
-.project-body { display: flex; flex-direction: column; gap: 0.85rem; }
+.project-body { display: flex; flex-direction: column; gap: 0.85rem; min-width: 0; }
 
 .project-body h2 {
   font-family: var(--serif);
