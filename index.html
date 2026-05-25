@@ -163,16 +163,10 @@ zsh scripts/install.sh</code></pre>
 brew install node
 
 cd ~/Downloads/marquee
-npm install
-cp .dev.vars.example .dev.vars
-# paste your operator-side TMDB v4 read token and public Trakt client ID
-# (free from themoviedb.org and trakt.tv) into .dev.vars, then:
-npx wrangler d1 execute marquee --local --file=migrations/0001_init.sql
-npx wrangler d1 execute marquee --local --file=migrations/0002_attention.sql
-npx wrangler d1 execute marquee --local --file=migrations/0003_v03.sql
-npx wrangler d1 execute marquee --local --file=migrations/0004_anime_opt_in.sql
+npm run setup    # installs deps, prompts for missing secrets, applies every
+                 # migration to the local D1, runs typecheck + tests
 npm run dev</code></pre>
-                <p>Open <code>http://127.0.0.1:7070/configure</code> in a browser; a Marquee ID is minted automatically and the page becomes your settings panel. Paste the displayed URL into Stremio's add-on search on any device. For production, run <code>wrangler login</code>, create a real D1 database, apply the same migrations with <code>--remote</code>, set <code>CONFIG_AES_KEY</code> as a worker secret (32 random bytes base64), and <code>wrangler deploy</code>; see <code>DEPLOY.md</code> in the repo for the full sequence.</p>
+                <p>You'll be prompted for an operator-side TMDB v4 read token and a public Trakt client ID (both free from themoviedb.org and trakt.tv). MDBList is optional and unlocks the Beloved bombs row. Open <code>http://127.0.0.1:8787/</code> in a browser and click "Add to Stremio", or paste <code>http://127.0.0.1:8787/manifest.json</code> into Stremio's add-on search on any device. For production, run <code>wrangler login</code>, create a real D1 database, apply the same migrations with <code>--remote</code>, set the secrets via <code>wrangler secret put</code>, and <code>wrangler deploy</code>; see <code>DEPLOY.md</code> in the repo for the full sequence.</p>
                 <p class="install-uninstall"><strong>Uninstall:</strong> remove the add-on from Stremio. Local D1 state lives in <code>.wrangler/state/</code>; delete the folder to wipe.</p>
               </div>
             </details>
