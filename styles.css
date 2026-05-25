@@ -431,6 +431,20 @@ pre code {
   border-color: var(--btn-border-hover);
 }
 
+.install-tier {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 1.1rem 0 0.3rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule-soft);
+}
+.install-body > .install-tier:first-of-type {
+  margin-top: 0.7rem;
+}
+
 .install-uninstall {
   font-size: 0.78rem !important;
   color: var(--ink-3) !important;

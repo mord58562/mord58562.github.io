@@ -45,27 +45,48 @@
           </div>
           <div class="project-body">
             <h2>A to E</h2>
-            <p class="project-desc">A practice MCQ bank for the final-year Australian MD student. An ever increasing number of single-best-answer clinical-reasoning questions across paediatrics, obstetrics &amp; gynaecology, psychiatry, and adult medicine, every option cited inline against a free Australian clinical reference so any claim is verifiable. Questions are calibrated to test the reasoning steps a candidate has to take, not solvable by spotting a keyword in the stem. Static frontend backed by a Cloudflare Worker; guest mode keeps progress on the device, signed-in users see how other users picked each option plus first-time accuracy and per-discipline stats. Authors paste new questions via a self-contained prompt that works in any free LLM (no API key required), audit and promote them through an in-app dashboard, or run a scheduled cloud agent that generates a fresh 15-20 question batch up to 15 times a day.</p>
+            <p class="project-desc">A practice MCQ bank for Australian medical students in their clinical years. An ever-increasing number of single-best-answer clinical-reasoning questions across paediatrics, obstetrics &amp; gynaecology, psychiatry, and adult medicine, every option cited inline against a free Australian clinical reference so any claim is verifiable. Questions are calibrated to test the reasoning steps a candidate has to take, not solvable by spotting a keyword in the stem. Static frontend backed by a Cloudflare Worker; guest mode keeps progress on the device, signed-in users see how other users picked each option plus first-time accuracy and per-discipline stats. Authors paste new questions via a self-contained prompt that works in any free LLM (no API key required), audit and promote them through an in-app dashboard, or run a scheduled cloud agent that publishes fresh batches automatically.</p>
             <div class="project-stack">Cloudflare Workers · D1 · GitHub Pages</div>
             <a class="project-source project-live" href="https://mord58562.github.io/a-to-e/" rel="noopener noreferrer" target="_blank">mord58562.github.io/a-to-e ↗ (live, guest mode - no signup)</a>
             <a class="project-source" href="https://github.com/mord58562/a-to-e" rel="noopener noreferrer" target="_blank">github.com/mord58562/a-to-e ↗</a>
             <details class="install">
               <summary>Install</summary>
               <div class="install-body">
-                <p>The frontend is a static site - clone or download the zip, open <code>index.html</code> in a browser, and you have the whole bank locally. The Cloudflare Worker piece is only needed if you want accounts + social stats + remote question generation.</p>
+                <p>There are three ways to use A to E, ordered by how much setup you want to do.</p>
+
+                <h4 class="install-tier">Option 1 - Just use it (zero setup)</h4>
+                <p>Open the live site above. Guest mode keeps your progress in your browser. Nothing to install.</p>
+
+                <h4 class="install-tier">Option 2 - Run the frontend locally (offline copy)</h4>
+                <p>You get the full question bank, all keyboard shortcuts, the reference-values panel, and local progress. No accounts, no cross-device sync. Good for offline study.</p>
                 <a class="download-btn" href="downloads/a-to-e.zip" download>Download source zip</a>
-                <p><strong>Live site:</strong> <a href="https://mord58562.github.io/a-to-e/">mord58562.github.io/a-to-e</a> (guest mode, no signup required).</p>
-                <p><strong>Run the worker yourself</strong> (optional, gives you accounts + stats + batch publishing):</p>
-                <pre><code>brew install cloudflare-wrangler
-cd cloudflare-worker
-wrangler login
-wrangler d1 create a-to-e               # paste the printed database_id into wrangler.toml
+                <pre><code>unzip a-to-e.zip &amp;&amp; cd a-to-e
+./scripts/start.sh             # serves http://127.0.0.1:8765/</code></pre>
+                <p>Requires <code>python3</code> (preinstalled on macOS and most Linux). Any modern browser.</p>
+
+                <h4 class="install-tier">Option 3 - Run your own worker (full self-host)</h4>
+                <p>Adds accounts, cross-device sync, social stats (your bank only sees your own users), and automated batch publishing back to your fork of the repo. Free on Cloudflare's hobby tier for small numbers of users.</p>
+                <p><strong>Prerequisites:</strong> a Cloudflare account, a GitHub fork of <code>mord58562/a-to-e</code>, and the wrangler CLI (<code>brew install cloudflare-wrangler</code>).</p>
+                <pre><code>cd cloudflare-worker
+npm install
+wrangler login                                       # opens browser, one-off
+wrangler d1 create a-to-e                            # copy database_id into wrangler.toml
 wrangler d1 execute a-to-e --file=schema.sql --remote
-wrangler secret put GITHUB_TOKEN        # fine-grained PAT scoped to your fork, Contents R/W
-wrangler secret put ROUTINE_TOKEN       # any random string; required for /commit-batch
+wrangler d1 execute a-to-e --file=schema_002_encrypt.sql --remote
+
+# Three secrets for PII encryption (generate any 32-byte values):
+openssl rand -base64 32 | wrangler secret put EMAIL_HMAC_KEY
+openssl rand -base64 32 | wrangler secret put EMAIL_ENC_KEY
+openssl rand -base64 32 | wrangler secret put SESSION_PEPPER
+
+# Two secrets for GitHub publishing (only if you want the in-app paste flow):
+wrangler secret put GITHUB_TOKEN                     # fine-grained PAT, Contents R/W on your fork
+wrangler secret put ROUTINE_TOKEN                    # any random string; gates /commit-batch
+
 wrangler deploy</code></pre>
-                <p>Then set <code>WORKER_URL</code> in <code>assets/app.js</code> to the printed worker URL, commit, push. See <code>cloudflare-worker/DEPLOY.md</code> for the full walkthrough.</p>
-                <p class="install-uninstall"><strong>Uninstall:</strong> <code>wrangler delete a-to-e-inbox</code> + <code>wrangler d1 delete a-to-e</code> on the worker side; remove the GitHub repo on the frontend side.</p>
+                <p>Wrangler prints your worker URL. Open <code>assets/app.js</code>, set <code>WORKER_URL</code> to that URL, commit and push to your fork. <code>cloudflare-worker/DEPLOY.md</code> walks through verification queries.</p>
+
+                <p class="install-uninstall"><strong>Uninstall (option 3 only):</strong> <code>wrangler delete a-to-e-worker</code> deletes the worker; <code>wrangler d1 delete a-to-e</code> deletes the database. For options 1 and 2 there is nothing to uninstall - close the tab or delete the folder.</p>
               </div>
             </details>
           </div>
