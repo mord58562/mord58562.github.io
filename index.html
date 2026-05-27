@@ -168,6 +168,40 @@ zsh scripts/install.sh</code></pre>
           <div class="project-meta">
             <span class="project-num">04</span>
             <div class="project-tags">
+              <span class="tag">macOS</span>
+              <span class="tag">SwiftUI</span>
+              <span class="tag">Python</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Set Memory</h2>
+            <p class="project-desc">A native macOS app for DJs that turns every CDJ-export USB into a searchable, deduped library and surfaces playlists worth making. Plug in a USB, the app launches and ingests automatically; a pure-Python <code>.pdb</code> parser (ported from the Pioneer format reverse-engineering by Deep-Symmetry) handles modern CDJ exports, and legacy <code>master.db</code> exports go through SQLCipher. Every track is collapsed via a normalised (title, artist) key so two USBs holding the same track count as one, with appearances summed and per-USB origins recorded as aliases. The app surfaces forgotten favourites, recently-added-still-unplayed buys, prep-audit candidates (missing BPM / key / hot cues, ranked by most-played first), played-together pairs and cliques mined from cross-USB session history, distribution across BPM buckets and Camelot keys, possibly-deleted tracks, and per-USB last-mounted timestamps. The headline feature is the auto-suggested playlists: six algorithms (forgotten pack, buy-regret pack, prep pack, co-occurrence cliques, seed-plus-companions, Camelot key chains, BPM warm-up-to-peak-to-cooldown arcs) generate ranked candidates, each with a one-click "Create in rekordbox" button that opens the Mac library, backs it up, and writes the playlist via pyrekordbox. Right-click any track to Play in default app, Reveal in Finder, or copy metadata; live USB monitoring via NSWorkspace means plugging or pulling a drive updates the GUI without a manual rescan. All on-machine, no cloud, no uploads, no audio analysis.</p>
+            <div class="project-stack">SwiftUI · pyrekordbox · DeviceSQL · SQLCipher · launchd</div>
+            <a class="project-source" href="https://github.com/mord58562/set-memory" rel="noopener noreferrer" target="_blank">github.com/mord58562/set-memory ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 13 Ventura or later, Apple Silicon, Homebrew, miniconda3 at <code>~/miniconda3/</code>. The installer verifies the toolchain, builds the SwiftUI GUI and the launchd ingest agent, and runs an end-to-end smoke test against whichever CDJ-export USB happens to be plugged in.</p>
+                <a class="download-btn" href="downloads/set-memory.zip" download>Download set-memory.zip</a>
+                <pre><code># one-time, skip if already installed
+brew install sqlcipher terminal-notifier
+brew install --cask miniconda
+
+cd ~/Downloads/set-memory
+~/miniconda3/bin/pip install pyrekordbox==0.4.4
+bash scripts/install.sh</code></pre>
+                <p>Plug in any CDJ-export USB (either <code>PIONEER/rekordbox/export.pdb</code> from rekordbox 6 export mode or the older <code>PIONEER/Master/master.db</code> SQLCipher layout) and the launchd agent auto-fires; the SwiftUI app at <code>/Applications/SetMemory.app</code> opens and refreshes live as the ingest writes. Non-rekordbox mounts are ignored silently. <code>config.json</code> holds only analysis thresholds; volumes are discovered, not configured.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>bash scripts/uninstall.sh</code> removes the launchd agent and leaves <code>state.db</code>, the GUI, and your <code>rekordbox-backups/</code> in place. Delete those manually for a clean slate.</p>
+                <p><strong>What's new in 0.8.0:</strong> playlist suggestion engine (six algorithms drawing across every USB ever synced) with one-click create-in-rekordbox per suggestion; native SwiftUI app at <code>/Applications/SetMemory.app</code> with Play / Reveal-in-Finder context actions; live USB mount/unmount monitoring (no manual rescan); notifications cut to errors + first-sync welcome; <code>.pdb</code>-format CDJ-export USBs ingested via a pure-Python DeviceSQL parser (modern rekordbox export mode is now the primary surface, legacy <code>master.db</code> stays supported as a richer-metadata enrichment source); bulletproof cross-USB dedup so the same track on two USBs collapses into one canonical row with summed plays; rekordbox 6 playlist writes backed up automatically.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">05</span>
+            <div class="project-tags">
               <span class="tag">Stremio</span>
               <span class="tag">Cloudflare Workers</span>
             </div>
@@ -199,7 +233,7 @@ npm run dev</code></pre>
 
         <article class="project">
           <div class="project-meta">
-            <span class="project-num">05</span>
+            <span class="project-num">06</span>
             <div class="project-tags">
               <span class="tag">Anki</span>
               <span class="tag">Python</span>
@@ -227,7 +261,7 @@ npm run dev</code></pre>
 
         <article class="project">
           <div class="project-meta">
-            <span class="project-num">06</span>
+            <span class="project-num">07</span>
             <div class="project-tags">
               <span class="tag">macOS</span>
               <span class="tag">SwiftUI</span>
@@ -258,38 +292,6 @@ open ~/Applications/Jury.app</code></pre>
           </div>
         </article>
 
-        <article class="project">
-          <div class="project-meta">
-            <span class="project-num">07</span>
-            <div class="project-tags">
-              <span class="tag">launchd</span>
-              <span class="tag">Python</span>
-            </div>
-          </div>
-          <div class="project-body">
-            <h2>Set Memory</h2>
-            <p class="project-desc">A mount-driven analyser for the rekordbox session log on a DJ USB. Every time you plug in a drive, Set Memory reads the encrypted <code>master.db</code> via SQLCipher, syncs the full <code>djmdContent</code> library plus every <code>djmdHistory</code> session into a local <code>state.db</code>, and surfaces what a digital DJ tends to lose track of: forgotten favourites (played often, not touched in months), library tracks never played at all, recently-added buys that haven't made it into a set, library tracks missing BPM / key / hot cues (sorted by most-played so the ones in rotation bubble up), track pairs that often appear together across sessions, plays distribution across BPM buckets and Camelot keys, and per-USB last-mounted tracking so a forgotten drive is obvious. Volumes are discovered, not configured. WAL-aware atomic snapshot; deterministic per-session fingerprinting so re-mounts and mirrored drives never double-count. All on-machine, no cloud, no uploads, no audio analysis.</p>
-            <div class="project-stack">launchd · pyrekordbox · SQLCipher</div>
-            <a class="project-source" href="https://github.com/mord58562/set-memory" rel="noopener noreferrer" target="_blank">github.com/mord58562/set-memory ↗</a>
-            <details class="install">
-              <summary>Install</summary>
-              <div class="install-body">
-                <p>Requirements: macOS 13 Ventura or later, Homebrew, miniconda3 at <code>~/miniconda3/</code>. The installer verifies the toolchain, builds the launchd agent, and runs an end-to-end smoke test against whatever drive is currently mounted (if any).</p>
-                <a class="download-btn" href="downloads/set-memory.zip" download>Download set-memory.zip</a>
-                <pre><code># one-time, skip if already installed
-brew install sqlcipher
-brew install --cask miniconda
-
-cd ~/Downloads/set-memory
-~/miniconda3/bin/pip install pyrekordbox==0.4.4
-bash scripts/install.sh</code></pre>
-                <p>Plug any rekordbox USB into the Mac and the agent fires automatically: digest at <code>~/Downloads/set-memory/digest.md</code> plus a macOS notification. Non-rekordbox mounts are ignored silently. <code>config.json</code> only holds analysis thresholds (no per-drive setup needed).</p>
-                <p class="install-uninstall"><strong>Uninstall:</strong> <code>bash scripts/uninstall.sh</code> - removes the launchd agent and leaves <code>state.db</code>, <code>digest.md</code>, and <code>logs/</code> in place. Delete them manually for a clean slate.</p>
-                <p><strong>What's new in 0.2.0:</strong> never-played actually works (the original release had a structural bug - the tracks table only got populated from sessions, so the "never played" query was always empty by construction); macOS notifications now fire (single-quoted AppleScript never compiled); BPM correctly normalised from rekordbox's integer-x-100 encoding; prep audit flags library tracks missing BPM / key / hot cues; played-together pairs from co-appearance; recently-added-unplayed as a buy-regret signal; distribution histogram across BPM buckets and Camelot keys; per-USB tracking; possibly-deleted tracks; sparkline + headline in the digest; <code>query</code> CLI subcommand so thresholds can be tweaked without remounting; schema migrations preserve existing state.db.</p>
-              </div>
-            </details>
-          </div>
-        </article>
 
         <article class="project">
           <div class="project-meta">
