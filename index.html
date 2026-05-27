@@ -87,6 +87,7 @@ wrangler deploy</code></pre>
                 <p>Wrangler prints your worker URL. Open <code>assets/app.js</code>, set <code>WORKER_URL</code> to that URL, commit and push to your fork. <code>cloudflare-worker/DEPLOY.md</code> walks through verification queries.</p>
 
                 <p class="install-uninstall"><strong>Uninstall (option 3 only):</strong> <code>wrangler delete a-to-e-worker</code> deletes the worker; <code>wrangler d1 delete a-to-e</code> deletes the database. For options 1 and 2 there is nothing to uninstall - close the tab or delete the folder.</p>
+                <p><strong>What's new in 2.0.0:</strong> cloud accounts (email + password) sync progress across devices, guest mode stays local; admin accounts get a unified Overview / Add &amp; Audit / Quality / Users / Account dashboard. Difficulty scale overhauled - L2 is the new floor, L3 / L4 dominate (~95%), L5 is a new extreme tier (~5%) requiring complex reasoning and possibly niche knowledge. Signed-in users see a social-stats panel showing what proportion of other users picked each option after submitting. Per-level difficulty toggles on the home screen. A scheduled cloud routine generates and self-audits fresh batches automatically.</p>
               </div>
             </details>
           </div>
@@ -190,6 +191,7 @@ npm run setup    # installs deps, prompts for missing secrets, applies every
 npm run dev</code></pre>
                 <p>You'll be prompted for an operator-side TMDB v4 read token and a public Trakt client ID (both free from themoviedb.org and trakt.tv). MDBList is optional and unlocks the Beloved bombs row. Open <code>http://127.0.0.1:8787/</code> in a browser and click "Add to Stremio", or paste <code>http://127.0.0.1:8787/manifest.json</code> into Stremio's add-on search on any device. For production, run <code>wrangler login</code>, create a real D1 database, apply the same migrations with <code>--remote</code>, set the secrets via <code>wrangler secret put</code>, and <code>wrangler deploy</code>; see <code>DEPLOY.md</code> in the repo for the full sequence.</p>
                 <p class="install-uninstall"><strong>Uninstall:</strong> remove the add-on from Stremio. Local D1 state lives in <code>.wrangler/state/</code>; delete the folder to wipe.</p>
+                <p><strong>What's new in 0.9.1:</strong> the anime row now emits <code>kitsu:</code> ids instead of <code>tt:</code>, so Torrentio, Comet, Knightcrawler, and TorBox return full anime stream lists for "Anime worth watching" tiles. Manifest <code>idPrefixes</code> widened to <code>["tt", "kitsu:"]</code> so Marquee still receives the engagement signal; <code>/stream/</code> stays a hardcoded no-op. Install landing page names the supported stream-addon set (Torrentio, Comet, MediaFusion, TorBox, Knightcrawler, Easynews, Jackettio) and gives a one-line AIOStreams coexistence tip. New <code>tests/harmony.test.ts</code> locks in the debrid-coexistence contract.</p>
               </div>
             </details>
           </div>
@@ -216,6 +218,8 @@ npm run dev</code></pre>
                 <p><strong>AnkiWeb:</strong> Tools → Add-ons → Get Add-ons → paste <code>720072719</code> → restart Anki.</p>
                 <a class="download-btn" href="downloads/theankidote.zip" download>Download TheAnkiDote.zip</a>
                 <p>On first launch, a welcome dialog lets you tick which of the three modules to enable. SSO setup and shortcut customization in <strong>Tools → The AnkiDote</strong>; see <code>config.md</code> in the repo for institutional SSO examples.</p>
+                <p><strong>What's new in 1.1.2:</strong> the AI chat toolbar icon now repaints the instant you switch LLM in the dock, instead of waiting for the new page to start loading; it also catches up automatically when an in-page navigation crosses provider boundaries (e.g. an OAuth bounce back to the host site).</p>
+                <p><strong>What's new in 1.1.0:</strong> ~340 preclinical / basic-science hover popups (cardiac, resp, renal, GI, endocrine, neuro, haem physiology; biochem pathways; micro; immuno; path; pharma; anatomy; embryology; genetics; biostats). 200+ eponym and abbreviation aliases (Wegener / GPA, Reiter / reactive arthritis, STEMI / NSTEMI, HFrEF, COPD, etc.). Welcome dialog redesign with per-module descriptions and a Recommended-companion section that auto-hides once installed.</p>
               </div>
             </details>
           </div>
