@@ -138,6 +138,41 @@ cd ~/Downloads/Earshot
             <div class="project-tags">
               <span class="tag">macOS</span>
               <span class="tag">SwiftUI</span>
+              <span class="tag">Python</span>
+            </div>
+          </div>
+          <div class="project-body">
+            <h2>Set Memory</h2>
+            <p class="project-desc">A native macOS app for DJs with two co-headline surfaces: the original Set Memory - a searchable, deduped record of every track and session you've ever played across every CDJ-export USB - and Playlist Lab, which mines that history into ready-to-deploy rekordbox playlists tilted toward discovery rather than greatest-hits. Every non-favourites playlist is capped at ≤5% heavy-rotation tracks so suggestions surface what's been missed, not what's already in every set. Three Tonight recipes (Familiar 60, Discovery 90, Deep Crate 120) compose opener / build / peak / cooldown / closer slots with stratified sampling across each track's appearance band. Hidden Gems, Library Tail, Buy-or-Bury, and Off-Headline Mates lift second-tier and forgotten material above the canon. Plug a USB in, the app launches and ingests automatically; a pure-Python <code>.pdb</code> parser handles modern CDJ exports and SQLCipher handles legacy <code>master.db</code> exports. Cross-USB dedup preserves version markers so "Original Mix" and "DJ X Remix" stay distinct. Click any suggestion card to preview its full tracklist (BPM, key, artist, play counts) before writing it into rekordbox. One click writes into the Mac rekordbox library (backed up first). All on-machine, no cloud.</p>
+            <div class="project-stack">SwiftUI · pyrekordbox · DeviceSQL · SQLCipher · launchd</div>
+            <a class="project-source" href="https://github.com/mord58562/set-memory" rel="noopener noreferrer" target="_blank">github.com/mord58562/set-memory ↗</a>
+            <details class="install">
+              <summary>Install</summary>
+              <div class="install-body">
+                <p>Requirements: macOS 13 Ventura or later, Apple Silicon, Homebrew, miniconda3 at <code>~/miniconda3/</code>. The installer verifies the toolchain, builds the SwiftUI GUI and the launchd ingest agent, and runs an end-to-end smoke test against whichever CDJ-export USB happens to be plugged in.</p>
+                <a class="download-btn" href="downloads/set-memory.zip" download>Download set-memory.zip</a>
+                <pre><code># one-time, skip if already installed
+brew install sqlcipher terminal-notifier
+brew install --cask miniconda
+
+cd ~/Downloads/set-memory
+~/miniconda3/bin/pip install pyrekordbox==0.4.4
+bash scripts/install.sh</code></pre>
+                <p>Plug in any CDJ-export USB (either <code>PIONEER/rekordbox/export.pdb</code> from rekordbox 6 export mode or the older <code>PIONEER/Master/master.db</code> SQLCipher layout) and the launchd agent auto-fires; the SwiftUI app at <code>/Applications/SetMemory.app</code> opens and refreshes live as the ingest writes. Non-rekordbox mounts are ignored silently. <code>config.json</code> holds only analysis thresholds; volumes are discovered, not configured.</p>
+                <p class="install-uninstall"><strong>Uninstall:</strong> <code>bash scripts/uninstall.sh</code> removes the launchd agent and leaves <code>state.db</code>, the GUI, and your <code>rekordbox-backups/</code> in place. Delete those manually for a clean slate.</p>
+                <p><strong>What's new in 0.10.0:</strong> Discovery-first rebalance. Every non-favourites playlist is capped at ≤5% top-50 heavy rotation; the suggestion list surfaces what you've been missing instead of what's already in every set. Three Tonight recipes with distinct characters - Familiar 60 (anchor-leaning), Discovery 90 (mostly mid-tier slot history), Deep Crate 120 (long-form, almost zero canon) - using stratified sampling across each track's appearance band; zero cross-recipe overlap. New Discovery family ranked above the canon packs (Hidden Gems, Off-Headline Mates, Library Tail, Loved at Home Never Played Out). Forgotten Favourites and Personal Canon demoted in score - still accessible, no longer the eye-line entry. Inline track preview on every suggestion card: click to expand the full ordered tracklist (BPM, key, title/artist, play count) before writing into rekordbox. Cross-USB dedup now preserves version markers so different mixes stay as distinct canonical rows. AI-tell copy strip across descriptions, names, and rationales.</p>
+                <p><strong>What's new in 0.9.0:</strong> Playlist Lab launched as a co-headline alongside the original Set Memory surface, with ~70 deterministic suggestions per refresh across 20+ generator families - Markov transition chains from your real back-to-back history ("From X you usually go..."), opener/peak/closer pools by mean track-position, recency-weighted personal canon, dormant cliques, anniversary set reconstructions, half-time double-time bridges, session-similarity retrieval, energy-arc presets, and editorial co-occurrence mined from your own rekordbox playlists. State.db now ingests rekordbox star ratings, free-text comments, genre, color tags, playcount, release year, length - all feed dedicated generators (5-star but cold, genre packs, color packs, "loved at home, never played out"). Performance pass: idle CPU near zero (pauses when not the front window), <code>PRAGMA data_version</code> skip eliminates redundant queries, heavy sections lazy-load on sidebar click, suggester subprocess throttled during ingest bursts.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+
+        <article class="project">
+          <div class="project-meta">
+            <span class="project-num">04</span>
+            <div class="project-tags">
+              <span class="tag">macOS</span>
+              <span class="tag">SwiftUI</span>
             </div>
           </div>
           <div class="project-body">
@@ -161,40 +196,6 @@ cd ableton-lives
 zsh scripts/install.sh</code></pre>
                 <p>The installer detects your Ableton folder, lets you add an optional external drive, configures storage caps, and offers to run the encrypted Drive setup at the end. The Swift menubar app is built locally via <code>swift/build.sh</code> and registered as a LaunchAgent.</p>
                 <p class="install-uninstall"><strong>Uninstall:</strong> <code>zsh scripts/uninstall.sh</code> - leaves your version store, config, cloud backup, and rclone authentication intact. Pass <code>--purge</code> to also wipe <code>~/.config/ableton-lives/</code>, the local <code>_versions/</code> tree, and the rclone remotes.</p>
-              </div>
-            </details>
-          </div>
-        </article>
-
-        <article class="project">
-          <div class="project-meta">
-            <span class="project-num">04</span>
-            <div class="project-tags">
-              <span class="tag">macOS</span>
-              <span class="tag">SwiftUI</span>
-              <span class="tag">Python</span>
-            </div>
-          </div>
-          <div class="project-body">
-            <h2>Set Memory</h2>
-            <p class="project-desc">A native macOS app for DJs with two co-headline surfaces: the original Set Memory - a searchable, deduped record of every track and session you've ever played across every CDJ-export USB - and Playlist Lab, which mines that history for ~70 ready-to-deploy rekordbox playlist suggestions per refresh. Plug a USB in, the app launches and ingests automatically; a pure-Python <code>.pdb</code> parser handles modern CDJ exports and SQLCipher handles legacy <code>master.db</code> exports. Tracks collapse via a normalised (title, artist) key so the same file on two USBs counts once, with cross-USB plays summed. Suggestions draw on signals nothing else surfaces: Markov walks over your real back-to-back transitions, opener/peak/closer pools by mean track-position, recency-weighted personal canon, dormant cliques, anniversary set reconstructions, half-time double-time bridges, session-similarity retrieval, and editorial co-occurrence mined from your own rekordbox playlists. Star ratings, comments, genres, color tags, rekordbox playcount all read. One click writes any suggestion into your Mac rekordbox library (backed up first). Right-click any track to Play, Reveal in Finder, or copy metadata. All on-machine, no cloud.</p>
-            <div class="project-stack">SwiftUI · pyrekordbox · DeviceSQL · SQLCipher · launchd</div>
-            <a class="project-source" href="https://github.com/mord58562/set-memory" rel="noopener noreferrer" target="_blank">github.com/mord58562/set-memory ↗</a>
-            <details class="install">
-              <summary>Install</summary>
-              <div class="install-body">
-                <p>Requirements: macOS 13 Ventura or later, Apple Silicon, Homebrew, miniconda3 at <code>~/miniconda3/</code>. The installer verifies the toolchain, builds the SwiftUI GUI and the launchd ingest agent, and runs an end-to-end smoke test against whichever CDJ-export USB happens to be plugged in.</p>
-                <a class="download-btn" href="downloads/set-memory.zip" download>Download set-memory.zip</a>
-                <pre><code># one-time, skip if already installed
-brew install sqlcipher terminal-notifier
-brew install --cask miniconda
-
-cd ~/Downloads/set-memory
-~/miniconda3/bin/pip install pyrekordbox==0.4.4
-bash scripts/install.sh</code></pre>
-                <p>Plug in any CDJ-export USB (either <code>PIONEER/rekordbox/export.pdb</code> from rekordbox 6 export mode or the older <code>PIONEER/Master/master.db</code> SQLCipher layout) and the launchd agent auto-fires; the SwiftUI app at <code>/Applications/SetMemory.app</code> opens and refreshes live as the ingest writes. Non-rekordbox mounts are ignored silently. <code>config.json</code> holds only analysis thresholds; volumes are discovered, not configured.</p>
-                <p class="install-uninstall"><strong>Uninstall:</strong> <code>bash scripts/uninstall.sh</code> removes the launchd agent and leaves <code>state.db</code>, the GUI, and your <code>rekordbox-backups/</code> in place. Delete those manually for a clean slate.</p>
-                <p><strong>What's new in 0.9.0:</strong> Playlist Lab is now a co-headline alongside the original Set Memory surface, with ~70 suggestions per refresh across 20+ generator families - Markov transition chains from your real back-to-back history ("From X you usually go..."), opener/peak/closer pools by mean track-position, recency-weighted personal canon, dormant cliques, anniversary set reconstructions, half-time double-time bridges, session-similarity retrieval, energy-arc presets, and editorial co-occurrence mined from your own rekordbox playlists. State.db now ingests rekordbox star ratings, free-text comments, genre, color tags, playcount, release year, length - all feed dedicated generators (5-star but cold, genre packs, color packs, "loved at home, never played out"). Performance pass: idle CPU near zero (pauses when not the front window), <code>PRAGMA data_version</code> skip eliminates redundant queries, heavy sections lazy-load on sidebar click, suggester subprocess throttled during ingest bursts. Critical fixes: GUI no longer flashes blank during ingest, suggester no longer TypeErrors at launch, dismiss-a-suggestion-and-get-a-replacement works across the deep variant pool.</p>
               </div>
             </details>
           </div>
